@@ -171,8 +171,51 @@ app.post('/api/import-pegawai', upload.single('file'), async (req, res) => {
 app.get('/api/download-template', (req, res) => {
   const filePath = path.join(__dirname, 'template_pegawai.xlsx');
   const fileName = 'template_pegawai.xlsx'; // Nama file yang ingin Anda tampilkan
-  res.download(filePath, fileName);
+
+  res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+  res.download(filePath, fileName, (err) => {
+    if (err) {
+      console.error('Error downloading file:', err);
+    }
+  });
 });
+
+// Endpoint search pegawai
+app.get('/api/search-pegawai', async (req, res) => {
+  const { category, keyword } = req.query;
+
+  let query = {};
+
+  if (category === 'Semua') {
+    query = {
+      $or: [
+        { nip: keyword },
+        { nama_lengkap: new RegExp(keyword, 'i') },
+        { instansi: new RegExp(keyword, 'i') },
+        { jabatan: new RegExp(keyword, 'i') }
+      ]
+    };
+  } else if (category === 'nip') {
+    query = { nip: keyword };
+  } else if (category === 'nama_lengkap') {
+    query = { nama_lengkap: new RegExp(keyword, 'i') };
+  } else if (category === 'instansi') {
+    query = { instansi: new RegExp(keyword, 'i') };
+  } else if (category === 'jabatan') {
+    query = { jabatan: new RegExp(keyword, 'i') };
+  }
+
+  try {
+    const pegawai = await Pegawai.find(query);
+    res.send(pegawai);
+  } catch (error) {
+    console.error('Error fetching pegawai:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

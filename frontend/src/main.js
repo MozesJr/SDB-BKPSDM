@@ -131,6 +131,12 @@ const routes = [
     component: Profile,
   },
   {
+    path: '/search-employee',
+    name: 'Search',
+    component: Search,
+    meta: { title: 'Search Pegawai' },
+  },
+  {
     path: '/',
     component: Index,
     children: [
@@ -138,11 +144,6 @@ const routes = [
         path: '',
         name: 'Beranda',
         component: Beranda,
-      },
-      {
-        path: 'search',
-        name: 'Search',
-        component: Search,
       },
       {
         path: 'informasi',
