@@ -22,6 +22,10 @@ import Maps from '@/views/admin/Maps.vue';
 import Users from '@/views/admin/Users.vue';
 import AddUser from '@/views/admin/AddUser.vue';
 import EditUser from '@/views/admin/EditUser.vue';
+import Pegawai from '@/views/admin/Pegawai.vue';
+import AddPegawai from '@/views/admin/AddPegawai.vue';
+import EditPegawai from '@/views/admin/EditPegawai.vue';
+import ImportPegawai from '@/views/admin/ImportPegawai.vue';
 
 // views for Auth layout
 import Login from '@/views/auth/Login.vue';
@@ -44,42 +48,62 @@ const routes = [
     path: '/admin',
     redirect: '/admin/dashboard',
     component: Admin,
-    meta: { requiresAuth: true, title: 'Admin' }, // tambahkan title
+    meta: { requiresAuth: true }, // tambahkan meta requiresAuth
     children: [
       {
         path: '/admin/dashboard',
         component: Dashboard,
-        meta: { requiresAuth: true, title: 'Dashboard' },
+        meta: { requiresAuth: true },
       },
       {
         path: '/admin/settings',
         component: Settings,
-        meta: { requiresAuth: true, title: 'Settings' },
+        meta: { requiresAuth: true },
       },
       {
         path: '/admin/tables',
         component: Tables,
-        meta: { requiresAuth: true, title: 'Tables' },
+        meta: { requiresAuth: true },
       },
       {
         path: '/admin/maps',
         component: Maps,
-        meta: { requiresAuth: true, title: 'Maps' },
+        meta: { requiresAuth: true },
       },
       {
         path: '/admin/users',
         component: Users,
-        meta: { requiresAuth: true, title: 'Users' },
+        meta: { requiresAuth: true },
       },
       {
         path: '/admin/add-user',
         component: AddUser,
-        meta: { requiresAuth: true, title: 'Add User' },
+        meta: { requiresAuth: true },
       },
       {
         path: '/admin/edit-user/:id',
         component: EditUser,
-        meta: { requiresAuth: true, title: 'Edit User' },
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/admin/pegawai',
+        component: Pegawai,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/admin/add-pegawai',
+        component: AddPegawai,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/admin/edit-pegawai/:id',
+        component: EditPegawai,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/admin/import-pegawai',
+        component: ImportPegawai,
+        meta: { requiresAuth: true, title: 'Import Pegawai' },
       },
     ],
   },
@@ -91,24 +115,20 @@ const routes = [
       {
         path: '/auth/login',
         component: Login,
-        meta: { title: 'Login' },
       },
       {
         path: '/auth/register',
         component: Register,
-        meta: { title: 'Register' },
       },
     ],
   },
   {
     path: '/landing',
     component: Landing,
-    meta: { title: 'Landing' },
   },
   {
     path: '/profile',
     component: Profile,
-    meta: { title: 'Profile' },
   },
   {
     path: '/',
@@ -118,29 +138,25 @@ const routes = [
         path: '',
         name: 'Beranda',
         component: Beranda,
-        meta: { title: 'Beranda' },
       },
       {
         path: 'search',
         name: 'Search',
         component: Search,
-        meta: { title: 'Search' },
       },
       {
         path: 'informasi',
         name: 'Informasi',
         component: Informasi,
-        meta: { title: 'Informasi' },
       },
       {
         path: 'kontak',
         name: 'Kontak',
         component: Kontak,
-        meta: { title: 'Kontak' },
       },
     ],
   },
-  { path: '/:pathMatch(.*)*', redirect: '/', meta: { title: 'Home' } },
+  { path: '/:pathMatch(.*)*', redirect: '/' },
 ];
 
 const router = createRouter({
@@ -164,12 +180,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
-});
-
-// Setelah setiap rute berubah, perbarui judul halaman
-router.afterEach((to) => {
-  const defaultTitle = 'SBD BPKSDM';
-  document.title = to.meta.title ? `${defaultTitle} | ${to.meta.title}` : defaultTitle;
 });
 
 createApp(App).use(router).mount('#app');
