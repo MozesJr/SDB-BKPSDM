@@ -1,3 +1,4 @@
+// Existing imports and setup
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -7,8 +8,10 @@ const xlsx = require('xlsx');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const User = require('./models/user');  // Import model User
-const Pegawai = require('./models/pegawai'); // Import model Pegawai
+const slugify = require('slugify');
+const User = require('./models/user');  
+const Pegawai = require('./models/pegawai'); 
+const Informasi = require('./models/informasi');
 
 const app = express();
 const port = 8000;
@@ -24,8 +27,17 @@ mongoose.connect('mongodb://localhost:27017/sbdbkpsdm', {
 });
 
 // Storage for file upload
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
 const upload = multer({ storage });
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // CRUD Routes for User
 app.get('/api/users', async (req, res) => {
@@ -214,6 +226,74 @@ app.get('/api/search-pegawai', async (req, res) => {
     console.error('Error fetching pegawai:', error);
     res.status(500).json({ message: 'Server error', error });
   }
+});
+
+// CRUD Routes for Informasi
+app.get('/api/informasi', async (req, res) => {
+  const informasi = await Informasi.find({ deleted_at: null }).populate('user');
+  res.send(informasi);
+});
+
+app.get('/api/informasi/:id', async (req, res) => {
+  const informasi = await Informasi.findById(req.params.id).populate('user');
+  res.send(informasi);
+});
+
+app.post('/api/informasi', upload.single('image'), async (req, res) => {
+  try {
+    const { judul, deskripsi, user } = req.body;
+    const slug = slugify(judul, { lower: true });
+    const image = req.file ? req.file.filename : 'default.jpg';
+
+    const informasi = new Informasi({
+      judul,
+      slug,
+      deskripsi,
+      user,
+      image,
+      tanggal_upload: new Date()
+    });
+
+    await informasi.save();
+    res.status(201).send(informasi);
+  } catch (error) {
+    res.status(400).send({ message: 'Error creating informasi', error });
+  }
+});
+
+app.put('/api/informasi/:id', upload.single('image'), async (req, res) => {
+  try {
+    const { judul, deskripsi, user } = req.body;
+    const slug = slugify(judul, { lower: true });
+    const image = req.file ? req.file.filename : undefined;
+
+    const updateData = {
+      judul,
+      slug,
+      deskripsi,
+      user,
+      updated_at: new Date()
+    };
+
+    if (image) {
+      updateData.image = image;
+    }
+
+    const informasi = await Informasi.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+    });
+
+    res.send(informasi);
+  } catch (error) {
+    res.status(400).send({ message: 'Error updating informasi', error });
+  }
+});
+
+app.delete('/api/informasi/:id', async (req, res) => {
+  const informasi = await Informasi.findByIdAndUpdate(req.params.id, {
+    deleted_at: Date.now(),
+  });
+  res.send(informasi);
 });
 
 

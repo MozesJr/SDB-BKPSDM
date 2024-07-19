@@ -2,7 +2,7 @@
   <div>
     <index-navbar />
     <main>
-      <div
+      <section
         class="relative pt-16 pb-32 flex content-center items-center justify-center min-h-screen-75"
       >
         <div
@@ -21,13 +21,8 @@
             <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
               <div class="pr-12">
                 <h1 class="text-white font-semibold text-5xl">
-                  Data Informasi
+                  {{ informasi.judul }}
                 </h1>
-                <p class="mt-4 text-lg text-blueGray-200">
-                  Berikut merupakan deta informasi yang ada pada Sub Bidang
-                  Diklat Badan Kepegawaian dan Pengembangan Sumber Daya Manusia.
-                  Kabupaten Manokwari Selatan, Provinsi Papua Barat, Indonesia.
-                </p>
               </div>
             </div>
           </div>
@@ -51,39 +46,29 @@
             ></polygon>
           </svg>
         </div>
-      </div>
+      </section>
 
       <section class="pb-20 bg-blueGray-200 -mt-24">
         <div class="container mx-auto px-4">
           <div class="flex flex-wrap">
-            <div
-              v-for="informasi in informasiList"
-              :key="informasi._id"
-              class="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center"
-            >
+            <div class="w-full px-4">
               <div
-                class="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg"
+                class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded"
               >
-                <div class="px-4 py-5 flex-auto">
-                  <div
-                    class="text-white p-3 text-center inline-flex items-center justify-center rounded-full"
-                  >
-                    <img
-                      :src="`http://localhost:8000/uploads/${informasi.image}`"
-                      alt="Informasi Image"
-                      class="w-full h-full rounded-full"
-                    />
-                  </div>
-                  <h6 class="text-xl font-semibold">{{ informasi.judul }}</h6>
-                  <p class="mt-2 mb-4 text-blueGray-500">
-                    {{ informasi.deskripsi.slice(0, 100)
-                    }}{{ informasi.deskripsi.length > 100 ? "..." : "" }}
-                  </p>
+                <div class="px-6 py-4">
+                  <img
+                    :src="`http://localhost:8000/uploads/${informasi.image}`"
+                    class="w-full h-auto rounded"
+                    v-if="informasi.image"
+                  />
+                  <div class="mt-4" v-html="informasi.deskripsi"></div>
+                </div>
+                <div class="px-6 py-4">
                   <router-link
-                    :to="`/informasi/${informasi._id}`"
+                    :to="`/data-informasi`"
                     class="text-lightBlue-500 underline"
                   >
-                    Selengkapnya
+                    Kembali
                   </router-link>
                 </div>
               </div>
@@ -104,7 +89,12 @@ import IndexNavbar from "@/components/Navbars/IndexNavbar.vue";
 export default {
   data() {
     return {
-      informasiList: [],
+      informasi: {
+        judul: "",
+        deskripsi: "",
+        user: {},
+        image: "",
+      },
     };
   },
   components: {
@@ -112,19 +102,15 @@ export default {
     FooterComponent,
   },
   methods: {
-    fetchInformasi() {
-      axios
-        .get("http://localhost:8000/api/informasi")
-        .then((response) => {
-          this.informasiList = response.data;
-        })
-        .catch((error) => {
-          console.error("Error fetching informasi:", error);
-        });
+    async fetchInformasi(id) {
+      const response = await axios.get(
+        `http://localhost:8000/api/informasi/${id}`
+      );
+      this.informasi = response.data;
     },
   },
   created() {
-    this.fetchInformasi();
+    this.fetchInformasi(this.$route.params.id);
   },
 };
 </script>
