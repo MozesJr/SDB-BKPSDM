@@ -12,6 +12,7 @@ const slugify = require('slugify');
 const User = require('./models/user');  
 const Pegawai = require('./models/pegawai'); 
 const Informasi = require('./models/informasi');
+const JadwalPelatihan = require('./models/jadwalPelatihan');
 
 const app = express();
 const port = 8000;
@@ -296,6 +297,54 @@ app.delete('/api/informasi/:id', async (req, res) => {
   res.send(informasi);
 });
 
+// CRUD Routes for Jadwal Pelatihan
+app.post('/api/jadwal-pelatihan', upload.single('file_pdf'), async (req, res) => {
+  try {
+    const { judul } = req.body;
+    const file_pdf = req.file ? req.file.filename : '';
+    const jadwalPelatihan = new JadwalPelatihan({
+      judul,
+      file_pdf,
+    });
+    await jadwalPelatihan.save();
+    res.status(201).send(jadwalPelatihan);
+  } catch (error) {
+    res.status(400).send({ message: 'Error creating jadwal pelatihan', error });
+  }
+});
+
+app.get('/api/jadwal-pelatihan', async (req, res) => {
+  const jadwalPelatihan = await JadwalPelatihan.find({ deleted_at: null });
+  res.send(jadwalPelatihan);
+});
+
+app.get('/api/jadwal-pelatihan/:id', async (req, res) => {
+  const jadwalPelatihan = await JadwalPelatihan.findById(req.params.id);
+  res.send(jadwalPelatihan);
+});
+
+app.put('/api/jadwal-pelatihan/:id', upload.single('file_pdf'), async (req, res) => {
+  try {
+    const { judul } = req.body;
+    const file_pdf = req.file ? req.file.filename : undefined;
+    const updateData = {
+      judul,
+      updated_at: new Date()
+    };
+    if (file_pdf) {
+      updateData.file_pdf = file_pdf;
+    }
+    const jadwalPelatihan = await JadwalPelatihan.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    res.send(jadwalPelatihan);
+  } catch (error) {
+    res.status(400).send({ message: 'Error updating jadwal pelatihan', error });
+  }
+});
+
+app.delete('/api/jadwal-pelatihan/:id', async (req, res) => {
+  const jadwalPelatihan = await JadwalPelatihan.findByIdAndUpdate(req.params.id, { deleted_at: Date.now() });
+  res.send(jadwalPelatihan);
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

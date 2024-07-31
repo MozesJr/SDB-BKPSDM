@@ -23,6 +23,7 @@ import Users from '@/views/admin/Users.vue';
 import AddUser from '@/views/admin/AddUser.vue';
 import EditUser from '@/views/admin/EditUser.vue';
 import Pegawai from '@/views/admin/Pegawai.vue';
+
 import AddPegawai from '@/views/admin/AddPegawai.vue';
 import EditPegawai from '@/views/admin/EditPegawai.vue';
 import ImportPegawai from '@/views/admin/ImportPegawai.vue';
@@ -30,6 +31,10 @@ import DataInformasi from '@/views/admin/DataInformasi.vue';
 import AddInformasi from '@/views/admin/AddInformasi.vue';
 import UpdateInformasi from '@/views/admin/EditInformasi.vue';
 import DetailInformasi from '@/views/admin/DetailInformasi.vue';
+
+import JadwalPelatihan from '@/views/admin/JadwalPelatihan.vue';
+import AddJadwalPelatihan from '@/views/admin/AddJadwalPelatihan.vue';
+import EditJadwalPelatihan from '@/views/admin/EditJadwalPelatihan.vue';
 
 // views for Auth layout
 import Login from '@/views/auth/Login.vue';
@@ -45,6 +50,7 @@ import Beranda from '@/components/User/Beranda.vue';
 import Search from '@/components/User/Search.vue';
 import Informasi from '@/components/User/Informasi.vue';
 import Information from '@/components/User/Informasi.vue';
+import JadwalPelatihanUser from '@/components/User/JadwalPelatihanUser.vue';
 import DetailInformation from '@/components/User/DetailInformasi.vue';
 import Kontak from '@/components/User/Kontak.vue';
 import ContactUs from '@/components/User/Kontak.vue';
@@ -132,6 +138,21 @@ const routes = [
         component: DetailInformasi,
         meta: { requiresAuth: true, title: 'Ubah Data Informasi' },
       },
+      {
+        path: '/admin/jadwal-pelatihan',
+        component: JadwalPelatihan,
+        meta: { requiresAuth: true, title: 'Jadwal Pelatihan' },
+      },
+      {
+        path: '/admin/add-jadwal-pelatihan',
+        component: AddJadwalPelatihan,
+        meta: { requiresAuth: true, title: 'Tambah Jadwal Pelatihan' },
+      },
+      {
+        path: '/admin/edit-jadwal-pelatihan/:id',
+        component: EditJadwalPelatihan,
+        meta: { requiresAuth: true, title: 'Edit Jadwal Pelatihan' },
+      },
     ],
   },
   {
@@ -179,6 +200,11 @@ const routes = [
     path: '/informasi/:id',
     name: 'DetailInformasi',
     component: DetailInformation,
+  },
+  {
+    path: '/jadwal-pelatihan',
+    component: JadwalPelatihanUser,
+    meta: { title: 'Jadwal Pelatihan' },
   },
   {
     path: '/',

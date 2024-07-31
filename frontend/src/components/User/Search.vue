@@ -109,11 +109,11 @@
                       <tr>
                         <th class="px-4 py-2">NIP</th>
                         <th class="px-4 py-2">Nama Lengkap</th>
-                        <th class="px-4 py-2">Instansi</th>
-                        <th class="px-4 py-2">Jabatan</th>
+                        <!-- <th class="px-4 py-2">Instansi</th>
+                        <th class="px-4 py-2">Jabatan</th> -->
                         <th class="px-4 py-2">Pangkat/Golongan</th>
                         <th class="px-4 py-2">Esalon</th>
-                        <th class="px-4 py-2">Tahun</th>
+                        <!-- <th class="px-4 py-2">Tahun</th> -->
                         <th class="px-4 py-2">PKN</th>
                         <th class="px-4 py-2">PKA</th>
                         <th class="px-4 py-2">PKP</th>
@@ -125,13 +125,13 @@
                         <td class="border px-4 py-2">
                           {{ result.nama_lengkap }}
                         </td>
-                        <td class="border px-4 py-2">{{ result.instansi }}</td>
-                        <td class="border px-4 py-2">{{ result.jabatan }}</td>
+                        <!-- <td class="border px-4 py-2">{{ result.instansi }}</td>
+                        <td class="border px-4 py-2">{{ result.jabatan }}</td> -->
                         <td class="border px-4 py-2">
                           {{ result.pangkat_golongan }}
                         </td>
                         <td class="border px-4 py-2">{{ result.esalon }}</td>
-                        <td class="border px-4 py-2">{{ result.tahun }}</td>
+                        <!-- <td class="border px-4 py-2">{{ result.tahun }}</td> -->
                         <td class="border px-4 py-2">
                           {{ result.pkn ? "✔" : "✘" }}
                         </td>

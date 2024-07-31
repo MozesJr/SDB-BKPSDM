@@ -242,6 +242,29 @@
             </router-link>
           </li>
           <li class="items-center">
+            <router-link
+              to="/admin/jadwal-pelatihan"
+              v-slot="{ href, navigate, isActive }"
+            >
+              <a
+                :href="href"
+                @click="navigate"
+                class="text-xs uppercase py-3 font-bold block"
+                :class="[
+                  isActive
+                    ? 'text-emerald-500 hover:text-emerald-600'
+                    : 'text-blueGray-700 hover:text-blueGray-500',
+                ]"
+              >
+                <i
+                  class="fas fa-table mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
+                ></i>
+                Data Informasi Jadwal
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
             <button
               class="text-xs uppercase py-3 font-bold block text-blueGray-700 hover:text-blueGray-500"
               @click="logout"
